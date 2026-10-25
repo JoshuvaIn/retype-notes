@@ -1,6 +1,6 @@
 {
   "name": "retype-notes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Retype your own notes to understand and remember them, with a words view, an on-note view and an optional ghost typist.",
   "main": "main.js",
   "scripts": {

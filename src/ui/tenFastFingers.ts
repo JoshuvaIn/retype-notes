@@ -147,7 +147,7 @@ export class TenFastFingersSession {
     });
     leftGroup.createSpan({
       cls: "mt-header-badge",
-      text: `WORDS · ${this.contentStyle.toUpperCase()}`,
+      text: `10FASTFINGERS · ${this.contentStyle.toUpperCase()}`,
     });
 
     const centerStats = headerStrip.createDiv({ cls: "mt-header-live-stats" });

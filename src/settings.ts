@@ -96,7 +96,7 @@ export class MonkeyTypingSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Words per session")
-      .setDesc("How many words a words-view session contains")
+      .setDesc("How many words a 10FastFingers session contains")
       .addDropdown((d) =>
         d
           .addOption("0", "All words")

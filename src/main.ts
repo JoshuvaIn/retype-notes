@@ -308,7 +308,7 @@ export default class RetypeNotesPlugin extends Plugin {
       const previewView = leaf.view as MonkeyTypingPreviewView;
       previewView.setSessionTitle(
         file,
-        `Words · ${choice.contentStyle.toUpperCase()}`,
+        `10FastFingers · ${choice.contentStyle.toUpperCase()}`,
         () => this.stopActiveSession(false)
       );
       const hostEl = previewView.getMountContainer();

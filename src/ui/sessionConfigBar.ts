@@ -45,7 +45,7 @@ export class SessionConfigBar {
     // 1. View Mode Group: 10FastFingers | On Note
     const viewGroup = this.el.createDiv({ cls: "mt-config-group" });
     const views: Array<{ id: "ten-fast-fingers" | "in-note"; label: string }> = [
-      { id: "ten-fast-fingers", label: "words" },
+      { id: "ten-fast-fingers", label: "10fastfingers" },
       { id: "in-note", label: "on note" },
     ];
     views.forEach((v) => {

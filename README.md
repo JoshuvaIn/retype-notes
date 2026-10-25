@@ -18,17 +18,17 @@ Everything you change often lives in the bar at the top of the typing area, so y
 
 | Control | What it does |
 | --- | --- |
-| **words / on note** | Switch between the two views (below). |
+| **10fastfingers / on note** | Switch between the two views (below). |
 | **text / exact / code** | **Text** types words only. **Exact** types every character, including punctuation. **Code** also includes code blocks. |
 | **30s / 1m / 2m / 5m / untimed** | Session length. |
-| **2L / 3L / 4L** (words view) | How many lines of words are visible. |
+| **2L / 3L / 4L** (10FastFingers view) | How many lines of words are visible. |
 | **5L / 6L / 7L** (on note) | How many lines are in each chunk when chunk mode is on. |
 
 The bar hides itself once you start typing and comes back when you restart.
 
 ### Two views
 
-- **Words:** a clean, classic word-by-word view. Type each word and press Space to move on.
+- **10FastFingers:** a clean, classic word-by-word view. Type each word and press Space to move on.
 - **On note:** type directly on top of your note, with its real formatting. Long notes are split into chunks, with a faint preview of the next chunk.
 
 ### Ghost typist (on note)
@@ -44,7 +44,7 @@ Open **Settings → Community plugins → Retype Notes** (or search "Retype" in 
 | Setting | What it does |
 | --- | --- |
 | Content styles in top bar | Which of Text, Exact and Code appear in the top bar. |
-| Words per session | How many words a words-view session contains (all, 25, 50, 100 or 200). |
+| Words per session | How many words a 10FastFingers session contains (all, 25, 50, 100 or 200). |
 | Strict mode | A wrong character is blocked and flashes red until you type the right one. |
 | Lenient symbols | Don't require exact punctuation and symbols. |
 | Skip headings / callouts | Leave headings or callout bodies out of the session. |
