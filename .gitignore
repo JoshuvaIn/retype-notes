@@ -1,0 +1,9 @@
+node_modules
+main.js
+data.json
+*.map
+.DS_Store
+"Monkey type vault"/
+Monkey type vault/
+idea_monkey_type_initial.md
+OBSIDIAN_PLUGIN_RULES.md
