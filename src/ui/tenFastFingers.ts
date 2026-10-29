@@ -185,7 +185,7 @@ export class TenFastFingersSession {
     restartTopBtn.onclick = () => this.resetSession();
 
     const exitBtn = rightActions.createEl("button", {
-      text: "Exit (Esc)",
+      text: "Exit (esc)",
       cls: "mt-header-btn",
     });
     exitBtn.onclick = () => this.callbacks.onExit();

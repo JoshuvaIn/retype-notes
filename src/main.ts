@@ -108,7 +108,7 @@ export default class RetypeNotesPlugin extends Plugin {
         if (file) {
           void this.startTypingSession(file, "whole");
         } else {
-          new Notice("Open a markdown note first.");
+          new Notice("Open a Markdown note first.");
         }
       },
     });
@@ -637,7 +637,7 @@ export default class RetypeNotesPlugin extends Plugin {
     };
 
     const exitBtn = rightActions.createEl("button", {
-      text: "Exit (Esc)",
+      text: "Exit (esc)",
       cls: "mt-header-btn",
     });
     exitBtn.onclick = (e) => {

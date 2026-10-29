@@ -8,6 +8,7 @@ Object.assign(globalThis, {
     return el;
   },
   createDiv: (opts?: { cls?: string; text?: string }) => globalThis.createEl("div", opts),
+  createFragment: () => document.createDocumentFragment(),
   createSpan: (opts?: { cls?: string; text?: string }) => globalThis.createEl("span", opts),
 });
 

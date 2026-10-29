@@ -52,18 +52,18 @@ export class ResultsStrip {
     // Actions
     const actionsRow = this.el.createDiv({ cls: "mt-results-actions" });
 
-    const nextBtn = actionsRow.createEl("button", { text: "Next (Tab)", cls: "mod-cta" });
+    const nextBtn = actionsRow.createEl("button", { text: "Next (tab)", cls: "mod-cta" });
     nextBtn.onclick = () => this.onNext();
 
-    const retryBtn = actionsRow.createEl("button", { text: "Retry (Enter)" });
+    const retryBtn = actionsRow.createEl("button", { text: "Retry (enter)" });
     retryBtn.onclick = () => this.onRetry();
 
     if (stats.troubleWords.length > 0) {
-      const weakBtn = actionsRow.createEl("button", { text: "Weak Words" });
+      const weakBtn = actionsRow.createEl("button", { text: "Weak words" });
       weakBtn.onclick = () => this.onWeakWords();
     }
 
-    const closeBtn = actionsRow.createEl("button", { text: "Close (Esc)" });
+    const closeBtn = actionsRow.createEl("button", { text: "Close (esc)" });
     closeBtn.onclick = () => this.onClose();
   }
 

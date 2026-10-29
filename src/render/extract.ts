@@ -278,7 +278,7 @@ export function extractTypeableChars(
 
     // Replace text nodes in-place with character spans
     for (const rep of textNodeReplacements) {
-      const frag = container.ownerDocument.createDocumentFragment();
+      const frag = createFragment();
       for (const c of rep.chars) {
         const span = createSpan();
         span.textContent = c.char;

@@ -69,7 +69,7 @@ export class MonkeyTypingSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Content styles in top bar")
-      .setDesc("Which styles you can switch between: Text (words only), Exact (every character), Code (includes code blocks)")
+      .setDesc("Which styles you can switch between: Text (words only), exact (every character), code (includes code blocks)")
       .then((st) => {
         const wrap = st.controlEl.createDiv({ cls: "mt-mini-toggles" });
         (["text", "exact", "code"] as const).forEach((key) => {
@@ -88,14 +88,14 @@ export class MonkeyTypingSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName("Words per session")
-      .setDesc("How many words a 10FastFingers session contains")
+      .setDesc("How many words a 10fastfingers session contains")
       .addDropdown((d) =>
         d
           .addOption("0", "All words")
-          .addOption("25", "25 words")
-          .addOption("50", "50 words")
-          .addOption("100", "100 words")
-          .addOption("200", "200 words")
+          .addOption("25", "25 Words")
+          .addOption("50", "50 Words")
+          .addOption("100", "100 Words")
+          .addOption("200", "200 Words")
           .setValue(String(this.s.tenFastWordLimit ?? 0))
           .onChange(async (val) => {
             this.s.tenFastWordLimit = parseInt(val, 10);
