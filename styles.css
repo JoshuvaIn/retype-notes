@@ -59,17 +59,13 @@
 .mt-error {
   color: var(--text-error);
   background-color: rgba(255, 80, 80, 0.14);
-  text-decoration-line: underline;
-  text-decoration-style: wavy;
-  text-decoration-color: var(--text-error);
+  border-bottom: 2px solid var(--text-error);
   border-radius: 2px;
 }
 
 .mt-missed {
   color: var(--text-muted);
-  text-decoration-line: underline;
-  text-decoration-style: dotted;
-  text-decoration-color: var(--text-muted);
+  border-bottom: 1px dotted var(--text-muted);
   opacity: 0.7;
 }
 
