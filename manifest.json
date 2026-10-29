@@ -1,7 +1,7 @@
 {
   "id": "retype-notes",
   "name": "Retype Notes",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "minAppVersion": "1.5.0",
   "description": "Retype your own notes to understand and remember them, with a 10FastFingers-style view, an on-note view and an optional ghost typist.",
   "author": "Max",
