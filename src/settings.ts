@@ -1,5 +1,6 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import type RetypeNotesPlugin from "./main";
+import type { PluginSettings } from "./types";
 
 type BoolKey =
   | "autoToggleSidebars"
@@ -27,9 +28,7 @@ export class MonkeyTypingSettingTab extends PluginSettingTab {
     this.plugin = plugin;
   }
 
-  // Settings are edited by key, so the shape is intentionally loose here.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private get s(): any {
+  private get s(): PluginSettings {
     return this.plugin.data.settings;
   }
 
@@ -81,14 +80,7 @@ export class MonkeyTypingSettingTab extends PluginSettingTab {
           box.onclick = async () => {
             const next = !box.hasClass("is-enabled");
             box.toggleClass("is-enabled", next);
-            this.s.enabledContentCards = {
-              text: true,
-              exact: true,
-              code: true,
-              ghost: false,
-              ...(this.s.enabledContentCards || {}),
-              [key]: next,
-            };
+            this.s.enabledContentCards = { ...this.s.enabledContentCards, [key]: next };
             await this.save();
           };
         });
@@ -127,7 +119,6 @@ export class MonkeyTypingSettingTab extends PluginSettingTab {
       .addSlider((sl) =>
         sl
           .setLimits(10, 200, 5)
-          .setDynamicTooltip()
           .setValue(this.s.targetWpm ?? 40)
           .onChange(async (val) => {
             this.s.targetWpm = val;

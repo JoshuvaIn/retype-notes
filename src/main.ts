@@ -35,8 +35,8 @@ export default class RetypeNotesPlugin extends Plugin {
   activeTenFastSession?: TenFastFingersSession;
   activeOverlayEl?: HTMLElement;
   activeRenderComp?: Component;
-  activeOnNoteTimerId?: any;
-  activeGhostTimerId?: any;
+  activeOnNoteTimerId?: number;
+  activeGhostTimerId?: number;
   lastActiveFile?: TFile;
   focusMode!: FocusMode;
   outlineIntegration!: OutlineIntegrationManager;
@@ -86,14 +86,14 @@ export default class RetypeNotesPlugin extends Plugin {
             item
               .setTitle("Retype: whole note")
               .setIcon("keyboard")
-              .onClick(() => this.startTypingSession(file, "whole"));
+              .onClick(() => void this.startTypingSession(file, "whole"));
           });
         } else if (file instanceof TFolder) {
           menu.addItem((item) => {
             item
               .setTitle("Retype: random paragraph from here")
               .setIcon("dice")
-              .onClick(() => this.startRandomSession(file));
+              .onClick(() => void this.startRandomSession(file));
           });
         }
       })
@@ -106,7 +106,7 @@ export default class RetypeNotesPlugin extends Plugin {
       callback: () => {
         const file = this.getTargetMarkdownFile();
         if (file) {
-          this.startTypingSession(file, "whole");
+          void this.startTypingSession(file, "whole");
         } else {
           new Notice("Open a markdown note first.");
         }
@@ -122,9 +122,9 @@ export default class RetypeNotesPlugin extends Plugin {
           ? this.app.vault.getAbstractFileByPath(folderPath)
           : this.app.vault.getRoot();
         if (folder instanceof TFolder) {
-          this.startRandomSession(folder);
+          void this.startRandomSession(folder);
         } else {
-          this.startRandomSession(this.app.vault.getRoot());
+          void this.startRandomSession(this.app.vault.getRoot());
         }
       },
     });
@@ -142,7 +142,7 @@ export default class RetypeNotesPlugin extends Plugin {
   }
 
   async loadPluginData() {
-    const loaded = await this.loadData();
+    const loaded = (await this.loadData()) as Partial<PluginData> | null;
     this.data = Object.assign({}, DEFAULT_DATA, loaded || {});
     this.data.settings = Object.assign(
       {},
@@ -202,11 +202,11 @@ export default class RetypeNotesPlugin extends Plugin {
   public stopActiveSession(closePreviewLeaf: boolean = false) {
     this.exitFocusMode();
     if (this.activeGhostTimerId) {
-      clearInterval(this.activeGhostTimerId);
+      window.clearInterval(this.activeGhostTimerId);
       this.activeGhostTimerId = undefined;
     }
     if (this.activeOnNoteTimerId) {
-      clearInterval(this.activeOnNoteTimerId);
+      window.clearInterval(this.activeOnNoteTimerId);
       this.activeOnNoteTimerId = undefined;
     }
     if (this.activeEngine) {
@@ -257,7 +257,7 @@ export default class RetypeNotesPlugin extends Plugin {
     }
 
     const randomFile = mdFiles[Math.floor(Math.random() * mdFiles.length)];
-    this.startTypingSession(randomFile, "random");
+    void this.startTypingSession(randomFile, "random");
   }
 
   /**
@@ -367,7 +367,7 @@ export default class RetypeNotesPlugin extends Plugin {
     this.stopActiveSession(false);
     const content = await this.app.vault.cachedRead(file);
 
-    const tempDiv = document.createElement("div");
+    const tempDiv = createDiv();
     const comp = new Component();
     comp.load();
     await MarkdownRenderer.render(
@@ -420,7 +420,7 @@ export default class RetypeNotesPlugin extends Plugin {
         },
         onRestart: () => {
           this.exitFocusMode();
-          this.mountTenFastFingersAndRun(
+          void this.mountTenFastFingersAndRun(
             file,
             hostContainerEl,
             mode,
@@ -432,7 +432,7 @@ export default class RetypeNotesPlugin extends Plugin {
           this.stopActiveSession(true);
         },
         onNextRandom: () => {
-          this.startRandomSession(this.app.vault.getRoot());
+          void this.startRandomSession(this.app.vault.getRoot());
         },
         onSwitchViewMode: async (newView) => {
           this.data.settings.typingViewMode = newView;
@@ -480,7 +480,7 @@ export default class RetypeNotesPlugin extends Plugin {
               onRestart: () => {},
               onExit: () => this.stopActiveSession(true),
               onNextRandom: () =>
-                this.startRandomSession(this.app.vault.getRoot()),
+                void this.startRandomSession(this.app.vault.getRoot()),
               onWeakWords: () => {},
             },
             this.getBestWpmForFile(file)
@@ -626,7 +626,7 @@ export default class RetypeNotesPlugin extends Plugin {
     restartBtn.onclick = (e) => {
       e.stopPropagation();
       this.exitFocusMode();
-      this.mountOverlayAndRun(
+      void this.mountOverlayAndRun(
         file,
         hostContainerEl,
         mode,
@@ -783,7 +783,7 @@ export default class RetypeNotesPlugin extends Plugin {
 
             if (!this.activeOnNoteTimerId) {
               const timerStartTs = Date.now();
-              this.activeOnNoteTimerId = setInterval(() => {
+              this.activeOnNoteTimerId = window.setInterval(() => {
                 if (engine.status !== "running") return;
                 const elapsedSec = Math.floor((Date.now() - timerStartTs) / 1000);
                 if (sessionTimerSeconds > 0) {
@@ -844,14 +844,14 @@ export default class RetypeNotesPlugin extends Plugin {
         onStatsUpdate: (stats) => {
           this.exitFocusMode();
           if (this.activeOnNoteTimerId) {
-            clearInterval(this.activeOnNoteTimerId);
+            window.clearInterval(this.activeOnNoteTimerId);
             this.activeOnNoteTimerId = undefined;
           }
           new ResultsStrip(overlay, stats, {
             onNext: () =>
-              this.startRandomSession(this.app.vault.getRoot()),
+              void this.startRandomSession(this.app.vault.getRoot()),
             onRetry: () =>
-              this.mountOverlayAndRun(
+              void this.mountOverlayAndRun(
                 file,
                 hostContainerEl,
                 mode,
@@ -861,7 +861,7 @@ export default class RetypeNotesPlugin extends Plugin {
               ),
             onWeakWords: () => {
               if (stats.troubleWords.length === 0) return;
-              this.startWeakWordsDrill(
+              void this.startWeakWordsDrill(
                 file,
                 hostContainerEl,
                 choice,
@@ -892,7 +892,7 @@ export default class RetypeNotesPlugin extends Plugin {
         if (!ch.isGhost) typeable.push(i);
       });
       let ghostEl: HTMLElement | undefined;
-      this.activeGhostTimerId = setInterval(() => {
+      this.activeGhostTimerId = window.setInterval(() => {
         if (engine.status !== "running" || typeable.length === 0) return;
         const elapsedSec = (engine.elapsedMs + (Date.now() - engine.startTime)) / 1000;
         const pace = this.data.settings.targetWpm || 40;

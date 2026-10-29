@@ -78,7 +78,7 @@ export class WpmRaceBar {
     this.userDotEl = this.trackEl.createDiv({
       cls: "mt-race-dot mt-race-dot-user",
     });
-    this.userDotEl.style.left = "0%";
+    this.userDotEl.setCssProps({ left: "0%" });
 
     // Clean inline readout at the right end of the rail
     this.readoutEl = this.el.createSpan({

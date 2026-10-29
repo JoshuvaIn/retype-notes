@@ -6,10 +6,10 @@ export interface SessionConfigBarOptions {
   timerSeconds: number;
   chunkLines: number;
   settings: PluginSettings;
-  onChangeViewMode: (viewMode: "ten-fast-fingers" | "in-note") => void;
-  onChangeContentStyle: (style: "text" | "ghost" | "exact" | "code") => void;
-  onChangeTimer: (seconds: number) => void;
-  onChangeChunkLines?: (chunkLines: number) => void;
+  onChangeViewMode: (viewMode: "ten-fast-fingers" | "in-note") => void | Promise<void>;
+  onChangeContentStyle: (style: "text" | "ghost" | "exact" | "code") => void | Promise<void>;
+  onChangeTimer: (seconds: number) => void | Promise<void>;
+  onChangeChunkLines?: (chunkLines: number) => void | Promise<void>;
   tenLines?: number;
   onChangeTenLines?: (lines: number) => void;
 }
@@ -57,7 +57,7 @@ export class SessionConfigBar {
         e.stopPropagation();
         if (this.opts.viewMode !== v.id) {
           this.opts.viewMode = v.id;
-          this.opts.onChangeViewMode(v.id);
+          void this.opts.onChangeViewMode(v.id);
         }
       };
     });
@@ -77,7 +77,7 @@ export class SessionConfigBar {
         if (this.opts.contentStyle !== s.id) {
           this.opts.contentStyle = s.id;
           this.render();
-          this.opts.onChangeContentStyle(s.id);
+          void this.opts.onChangeContentStyle(s.id);
         }
       };
     });
@@ -103,7 +103,7 @@ export class SessionConfigBar {
         if (this.opts.timerSeconds !== t.sec) {
           this.opts.timerSeconds = t.sec;
           this.render();
-          this.opts.onChangeTimer(t.sec);
+          void this.opts.onChangeTimer(t.sec);
         }
       };
     });
@@ -150,7 +150,7 @@ export class SessionConfigBar {
           if (this.opts.chunkLines !== lines) {
             this.opts.chunkLines = lines;
             this.render();
-            this.opts.onChangeChunkLines?.(lines);
+            void this.opts.onChangeChunkLines?.(lines);
           }
         };
       });

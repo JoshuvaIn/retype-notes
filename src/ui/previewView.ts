@@ -25,7 +25,7 @@ export class MonkeyTypingPreviewView extends ItemView {
   setSessionTitle(file: TFile, modeLabel: string, onCloseCallback?: () => void) {
     this.currentTitle = `Typing: ${file.basename} (${modeLabel})`;
     this.onCloseCallback = onCloseCallback;
-    (this.leaf as any).updateHeader?.();
+    (this.leaf as WorkspaceLeaf & { updateHeader?: () => void }).updateHeader?.();
   }
 
   getMountContainer(): HTMLElement {

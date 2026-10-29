@@ -36,7 +36,7 @@ export class TypingEngine {
   currentWordHasError: boolean = false;
 
   timeline: WpmSample[] = [];
-  sampleIntervalId?: any;
+  sampleIntervalId?: number | null;
 
   events: EngineEvents = {};
 
@@ -73,8 +73,8 @@ export class TypingEngine {
   }
 
   private startTicker() {
-    if (this.sampleIntervalId) clearInterval(this.sampleIntervalId);
-    this.sampleIntervalId = setInterval(() => {
+    if (this.sampleIntervalId) window.clearInterval(this.sampleIntervalId);
+    this.sampleIntervalId = window.setInterval(() => {
       if (this.status === "running") {
         // Auto-pause if idle timeout exceeded
         const now = Date.now();
@@ -107,7 +107,7 @@ export class TypingEngine {
     this.elapsedMs += Date.now() - this.startTime;
     this.events.onStatusChange?.("paused");
     if (this.sampleIntervalId) {
-      clearInterval(this.sampleIntervalId);
+      window.clearInterval(this.sampleIntervalId);
       this.sampleIntervalId = null;
     }
   }
@@ -123,7 +123,7 @@ export class TypingEngine {
 
   destroy() {
     if (this.sampleIntervalId) {
-      clearInterval(this.sampleIntervalId);
+      window.clearInterval(this.sampleIntervalId);
       this.sampleIntervalId = null;
     }
   }
@@ -440,7 +440,7 @@ export class TypingEngine {
     this.endTime = Date.now();
     this.elapsedMs += this.endTime - this.startTime;
     if (this.sampleIntervalId) {
-      clearInterval(this.sampleIntervalId);
+      window.clearInterval(this.sampleIntervalId);
       this.sampleIntervalId = null;
     }
     this.emitLiveProgress();

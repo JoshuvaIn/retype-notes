@@ -6,6 +6,18 @@ export interface FocusModeOptions {
   right: boolean;
 }
 
+// Obsidian keeps the sidebars on the workspace but does not type them publicly.
+interface CollapsibleSplit {
+  collapsed: boolean;
+  collapse?: () => void;
+  expand?: () => void;
+}
+
+type WorkspaceWithSidebars = App["workspace"] & {
+  leftSplit?: CollapsibleSplit;
+  rightSplit?: CollapsibleSplit;
+};
+
 /**
  * Automatically collapses Obsidian's left and right sidebars when typing begins,
  * and restores only the panels that were open before the session started.
@@ -20,9 +32,9 @@ export class FocusMode {
   public enter(opts: FocusModeOptions) {
     if (!opts.enabled || this.active) return;
 
-    const workspace = this.app?.workspace as any;
-    const leftSplit = workspace?.leftSplit;
-    const rightSplit = workspace?.rightSplit;
+    const workspace = this.app.workspace as WorkspaceWithSidebars;
+    const leftSplit = workspace.leftSplit;
+    const rightSplit = workspace.rightSplit;
 
     this.collapsedLeft = Boolean(opts.left && leftSplit && !leftSplit.collapsed);
     this.collapsedRight = Boolean(opts.right && rightSplit && !rightSplit.collapsed);
@@ -40,9 +52,9 @@ export class FocusMode {
   public exit() {
     if (!this.active) return;
 
-    const workspace = this.app?.workspace as any;
-    const leftSplit = workspace?.leftSplit;
-    const rightSplit = workspace?.rightSplit;
+    const workspace = this.app.workspace as WorkspaceWithSidebars;
+    const leftSplit = workspace.leftSplit;
+    const rightSplit = workspace.rightSplit;
 
     if (this.collapsedLeft && leftSplit?.collapsed) {
       leftSplit.expand?.();

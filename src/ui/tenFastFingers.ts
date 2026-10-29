@@ -13,9 +13,9 @@ export interface TenFastFingersCallbacks {
   onWeakWords: (troubleWords: string[]) => void;
   onTypingStarted?: () => void;
   onSessionStoppedOrCompleted?: () => void;
-  onSwitchViewMode?: (newView: "ten-fast-fingers" | "in-note") => void;
-  onSwitchContentStyle?: (newStyle: "text" | "ghost" | "exact" | "code") => void;
-  onChangeTimerSetting?: (seconds: number) => void;
+  onSwitchViewMode?: (newView: "ten-fast-fingers" | "in-note") => void | Promise<void>;
+  onSwitchContentStyle?: (newStyle: "text" | "ghost" | "exact" | "code") => void | Promise<void>;
+  onChangeTimerSetting?: (seconds: number) => void | Promise<void>;
   onSettingsChanged?: () => void;
 }
 
@@ -47,7 +47,7 @@ export class TenFastFingersSession {
   private startTime: number = 0;
   private durationLimitSeconds: number = 60;
   private remainingSeconds: number = 60;
-  private timerIntervalId?: any;
+  private timerIntervalId?: number | null;
 
   private correctWordsCount: number = 0;
   private wrongWordsCount: number = 0;
@@ -123,17 +123,17 @@ export class TenFastFingersSession {
       },
       settings: this.settings,
       onChangeViewMode: (newView) => {
-        this.callbacks.onSwitchViewMode?.(newView);
+        void this.callbacks.onSwitchViewMode?.(newView);
       },
       onChangeContentStyle: (newStyle) => {
         this.contentStyle = newStyle;
-        this.callbacks.onSwitchContentStyle?.(newStyle);
+        void this.callbacks.onSwitchContentStyle?.(newStyle);
       },
       onChangeTimer: (seconds) => {
         this.durationLimitSeconds = seconds;
         this.remainingSeconds = seconds;
         this.timerBadgeEl.setText(this.formatTimer(this.remainingSeconds));
-        this.callbacks.onChangeTimerSetting?.(seconds);
+        void this.callbacks.onChangeTimerSetting?.(seconds);
         this.inputEl.focus();
       },
     });
@@ -247,7 +247,7 @@ export class TenFastFingersSession {
     });
 
     this.bindEvents();
-    setTimeout(() => this.inputEl?.focus(), 50);
+    window.setTimeout(() => this.inputEl?.focus(), 50);
   }
 
   private formatTimer(seconds: number): string {
@@ -324,8 +324,8 @@ export class TenFastFingersSession {
     this.callbacks.onTypingStarted?.();
     this.inputEl.focus();
 
-    if (this.timerIntervalId) clearInterval(this.timerIntervalId);
-    this.timerIntervalId = setInterval(() => {
+    if (this.timerIntervalId) window.clearInterval(this.timerIntervalId);
+    this.timerIntervalId = window.setInterval(() => {
       if (this.status !== "running") return;
       const elapsedSec = Math.floor((Date.now() - this.startTime) / 1000);
 
@@ -482,7 +482,7 @@ export class TenFastFingersSession {
     if (this.status === "completed") return;
     this.status = "completed";
     if (this.timerIntervalId) {
-      clearInterval(this.timerIntervalId);
+      window.clearInterval(this.timerIntervalId);
       this.timerIntervalId = null;
     }
 
@@ -503,7 +503,7 @@ export class TenFastFingersSession {
 
   public resetSession() {
     if (this.timerIntervalId) {
-      clearInterval(this.timerIntervalId);
+      window.clearInterval(this.timerIntervalId);
       this.timerIntervalId = null;
     }
     this.callbacks.onSessionStoppedOrCompleted?.();
@@ -521,7 +521,7 @@ export class TenFastFingersSession {
 
   public destroy() {
     if (this.timerIntervalId) {
-      clearInterval(this.timerIntervalId);
+      window.clearInterval(this.timerIntervalId);
       this.timerIntervalId = null;
     }
     this.overlayEl?.remove();

@@ -1,4 +1,4 @@
-import { App, MarkdownView, TFile, WorkspaceLeaf } from "obsidian";
+import { App, HeadingCache, MarkdownView, TFile, View, WorkspaceLeaf } from "obsidian";
 
 export interface OutlineIntegrationHost {
   app: App;
@@ -7,7 +7,6 @@ export interface OutlineIntegrationHost {
       enableOutlineIntegration: boolean;
       outlineDoubleClickToType: boolean;
       outlineShowPopoverOnClick: boolean;
-      [key: string]: any;
     };
   };
   startTypingSession: (
@@ -17,9 +16,23 @@ export interface OutlineIntegrationHost {
   ) => Promise<void>;
 }
 
+interface OutlineListeners {
+  onClick: (evt: MouseEvent) => void;
+  onDblClick: (evt: MouseEvent) => void;
+}
+
+interface ResolvedHeading {
+  activeFile: TFile;
+  headingTitle: string;
+  matchedHeading: HeadingCache | null;
+  treeSelfEl: HTMLElement;
+}
+
 export class OutlineIntegrationManager {
   private host: OutlineIntegrationHost;
-  private boundLeaves = new Set<WorkspaceLeaf>();
+  // Keyed by outline container so each one gets its listeners exactly once and
+  // they can be removed again when the plugin unloads.
+  private boundContainers = new Map<HTMLElement, OutlineListeners>();
   private activePopoverEl: HTMLElement | null = null;
   private documentClickHandler: (e: MouseEvent) => void;
   private documentKeyHandler: (e: KeyboardEvent) => void;
@@ -53,46 +66,40 @@ export class OutlineIntegrationManager {
     const outlineLeaves = this.host.app.workspace.getLeavesOfType("outline");
     outlineLeaves.forEach((leaf) => {
       const containerEl = leaf.view?.containerEl;
-      if (!containerEl || (containerEl as any).__mt_outline_bound) {
+      if (!containerEl || this.boundContainers.has(containerEl)) {
         return;
       }
 
-      (containerEl as any).__mt_outline_bound = true;
-      this.boundLeaves.add(leaf);
-
       // Single click: navigates natively (or shows popover if user configured popover-on-click)
-      containerEl.addEventListener(
-        "click",
-        (evt: MouseEvent) => this.handleOutlineClick(leaf, evt),
-        true
-      );
-
+      const onClick = (evt: MouseEvent) => this.handleOutlineClick(leaf, evt);
       // Double click: instantly launches Topic Typing for the selected section
-      containerEl.addEventListener(
-        "dblclick",
-        (evt: MouseEvent) => this.handleOutlineDblClick(leaf, evt),
-        true
-      );
+      const onDblClick = (evt: MouseEvent) => {
+        void this.handleOutlineDblClick(leaf, evt);
+      };
+
+      containerEl.addEventListener("click", onClick, true);
+      containerEl.addEventListener("dblclick", onDblClick, true);
+      this.boundContainers.set(containerEl, { onClick, onDblClick });
     });
   }
 
   private resolveHeading(
     leaf: WorkspaceLeaf,
     target: HTMLElement
-  ): { activeFile: TFile; headingTitle: string; matchedHeading: any; treeSelfEl: HTMLElement } | null {
+  ): ResolvedHeading | null {
     // If user clicked the collapse chevron, let Obsidian expand/collapse normally
     if (target.closest(".collapse-icon") || target.closest(".tree-item-icon")) {
       return null;
     }
 
-    const treeSelfEl = target.closest(".tree-item-self") as HTMLElement | null;
+    const treeSelfEl = target.closest<HTMLElement>(".tree-item-self");
     if (!treeSelfEl) {
       return null;
     }
 
-    const viewAny = leaf.view as any;
+    const viewWithFile = leaf.view as View & { file?: TFile | null };
     const activeFile: TFile | null =
-      viewAny?.file || this.host.app.workspace.getActiveFile();
+      viewWithFile.file || this.host.app.workspace.getActiveFile();
     if (!activeFile) {
       return null;
     }
@@ -190,12 +197,11 @@ export class OutlineIntegrationManager {
     anchorEl: HTMLElement,
     file: TFile,
     headingTitle: string,
-    headingObj: any
+    headingObj: HeadingCache | null
   ) {
     this.closePopover();
 
-    const popover = document.createElement("div");
-    popover.className = "mt-outline-popover";
+    const popover = document.body.createDiv({ cls: "mt-outline-popover" });
 
     // 1. Heading Header Pill
     const headerEl = popover.createDiv({ cls: "mt-outline-popover-header" });
@@ -219,10 +225,10 @@ export class OutlineIntegrationManager {
       text: "Start typing this section",
     });
 
-    typeBtn.onclick = async (e) => {
+    typeBtn.onclick = (e) => {
       e.stopPropagation();
       this.closePopover();
-      await this.host.startTypingSession(file, "section", [headingTitle]);
+      void this.host.startTypingSession(file, "section", [headingTitle]);
     };
 
     // 3. Option: <Show>
@@ -243,7 +249,6 @@ export class OutlineIntegrationManager {
       this.navigateToHeading(file, headingTitle, headingObj);
     };
 
-    document.body.appendChild(popover);
     this.activePopoverEl = popover;
 
     // Position popover right below anchorEl
@@ -262,7 +267,7 @@ export class OutlineIntegrationManager {
     popover.style.top = `${Math.round(top)}px`;
   }
 
-  private navigateToHeading(file: TFile, headingTitle: string, headingObj: any) {
+  private navigateToHeading(file: TFile, headingTitle: string, headingObj: HeadingCache | null) {
     const mdLeaves = this.host.app.workspace.getLeavesOfType("markdown");
     let found = false;
 
@@ -284,7 +289,7 @@ export class OutlineIntegrationManager {
     }
 
     if (!found) {
-      this.host.app.workspace.openLinkText(
+      void this.host.app.workspace.openLinkText(
         `${file.path}#${headingTitle}`,
         file.path,
         false
@@ -308,12 +313,10 @@ export class OutlineIntegrationManager {
     );
     document.removeEventListener("keydown", this.documentKeyHandler, true);
 
-    this.boundLeaves.forEach((leaf) => {
-      const containerEl = leaf.view?.containerEl;
-      if (containerEl) {
-        (containerEl as any).__mt_outline_bound = false;
-      }
+    this.boundContainers.forEach((listeners, containerEl) => {
+      containerEl.removeEventListener("click", listeners.onClick, true);
+      containerEl.removeEventListener("dblclick", listeners.onDblClick, true);
     });
-    this.boundLeaves.clear();
+    this.boundContainers.clear();
   }
 }

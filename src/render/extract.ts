@@ -280,7 +280,7 @@ export function extractTypeableChars(
     for (const rep of textNodeReplacements) {
       const frag = container.ownerDocument.createDocumentFragment();
       for (const c of rep.chars) {
-        const span = container.ownerDocument.createElement("span");
+        const span = createSpan();
         span.textContent = c.char;
         span.className = getInitialCharClass(c);
         c.spanRef = span;
@@ -309,7 +309,7 @@ export function extractTypeableChars(
     const hasTypeable = block.chars.some((c) => !c.isGhost);
     const lastChar = block.chars[block.chars.length - 1];
     if (hasTypeable && lastChar && lastChar.char !== " ") {
-      const spaceSpan = container.ownerDocument.createElement("span");
+      const spaceSpan = createSpan();
       spaceSpan.textContent = " ";
       spaceSpan.className = "mt-char mt-pending mt-space";
 

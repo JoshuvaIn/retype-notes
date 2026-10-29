@@ -4,7 +4,7 @@
   position: relative;
   height: 100%;
   width: 100%;
-  padding: 0 !important;
+  padding: 0;
   overflow: hidden;
 }
 
@@ -33,9 +33,9 @@
   line-height: 1.9;
   max-width: 780px;
   margin: 0 auto;
-  padding: 16px 0 0 0 !important;
-  height: auto !important;
-  overflow: visible !important;
+  padding: 16px 0 0 0;
+  height: auto;
+  overflow: visible;
 }
 
 /* Character states — preserve spaces and prevent layout shift */
@@ -57,20 +57,24 @@
 }
 
 .mt-error {
-  color: var(--text-error) !important;
+  color: var(--text-error);
   background-color: rgba(255, 80, 80, 0.14);
-  text-decoration: underline wavy var(--text-error);
+  text-decoration-line: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: var(--text-error);
   border-radius: 2px;
 }
 
 .mt-missed {
   color: var(--text-muted);
-  text-decoration: underline dotted var(--text-muted);
+  text-decoration-line: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--text-muted);
   opacity: 0.7;
 }
 
 .mt-hidden-char {
-  color: transparent !important;
+  color: transparent;
   border-bottom: 1.5px dashed var(--text-faint);
 }
 
@@ -93,8 +97,8 @@
 
 /* Ghost mode elements */
 .mt-ghost {
-  opacity: 0.35 !important;
-  color: var(--text-faint) !important;
+  opacity: 0.35;
+  color: var(--text-faint);
 }
 
 /* Sticky Header Strip (Live WPM, Progress, Controls) */
@@ -425,8 +429,8 @@
 }
 
 .mt-10ff-active-error {
-  background: rgba(217, 48, 37, 0.14) !important;
-  color: #d93025 !important;
+  background: rgba(217, 48, 37, 0.14);
+  color: #d93025;
 }
 
 .mt-10ff-correct {
@@ -448,21 +452,21 @@
   gap: 10px;
 }
 
-.mt-10ff-input {
+input.mt-10ff-input {
   width: 340px;
   max-width: 65%;
-  height: 42px !important;
-  font-size: 1.3rem !important;
-  padding: 4px 12px !important;
-  border: 1px solid var(--background-modifier-border-hover) !important;
-  border-radius: 4px !important;
-  background: var(--background-primary) !important;
-  color: var(--text-normal) !important;
+  height: 42px;
+  font-size: 1.3rem;
+  padding: 4px 12px;
+  border: 1px solid var(--background-modifier-border-hover);
+  border-radius: 4px;
+  background: var(--background-primary);
+  color: var(--text-normal);
 }
 
-.mt-10ff-input:focus {
-  border-color: var(--interactive-accent) !important;
-  box-shadow: 0 0 0 2px rgba(70, 130, 240, 0.25) !important;
+input.mt-10ff-input:focus {
+  border-color: var(--interactive-accent);
+  box-shadow: 0 0 0 2px rgba(70, 130, 240, 0.25);
 }
 
 .mt-10ff-timer {
@@ -482,23 +486,23 @@
   user-select: none;
 }
 
-.mt-10ff-restart-btn {
-  height: 42px !important;
+button.mt-10ff-restart-btn {
+  height: 42px;
   min-width: 46px;
-  padding: 0 12px !important;
-  background: #337ab7 !important;
-  color: #ffffff !important;
-  font-size: 1.3rem !important;
+  padding: 0 12px;
+  background: #337ab7;
+  color: #ffffff;
+  font-size: 1.3rem;
   font-weight: bold;
-  border: none !important;
-  border-radius: 4px !important;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-.mt-10ff-restart-btn:hover {
+button.mt-10ff-restart-btn:hover {
   filter: brightness(1.08);
 }
 
@@ -550,26 +554,26 @@
   user-select: none;
 }
 
-.mt-config-pill {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 3px 8px !important;
-  height: auto !important;
-  border-radius: 5px !important;
-  color: var(--text-muted) !important;
-  font-size: 0.85rem !important;
+button.mt-config-pill {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 3px 8px;
+  height: auto;
+  border-radius: 5px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
   cursor: pointer;
   transition: color 0.12s ease, background 0.12s ease;
 }
 
-.mt-config-pill:hover {
-  color: var(--text-normal) !important;
+button.mt-config-pill:hover {
+  color: var(--text-normal);
 }
 
-.mt-config-pill.is-active {
-  color: var(--interactive-accent) !important;
-  background: var(--background-modifier-hover) !important;
+button.mt-config-pill.is-active {
+  color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
   font-weight: 600;
 }
 
@@ -702,19 +706,19 @@
   font-size: 0.78rem;
 }
 
-.mt-chunk-nav-btn {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  padding: 0 4px !important;
-  height: 20px !important;
+button.mt-chunk-nav-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0 4px;
+  height: 20px;
   cursor: pointer;
-  color: var(--text-muted) !important;
-  font-size: 0.72rem !important;
+  color: var(--text-muted);
+  font-size: 0.72rem;
 }
 
-.mt-chunk-nav-btn:hover {
-  color: var(--text-normal) !important;
+button.mt-chunk-nav-btn:hover {
+  color: var(--text-normal);
 }
 
 .mt-chunk-nav-label {
@@ -790,23 +794,23 @@
   display: block;
 }
 
-.mt-outline-popover-btn {
+button.mt-outline-popover-btn {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 7px 10px;
   border-radius: 6px;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: transparent;
+  border: none;
+  box-shadow: none;
   cursor: pointer;
   text-align: left;
   transition: background 0.12s ease;
   width: 100%;
 }
 
-.mt-outline-popover-btn:hover {
-  background: var(--background-modifier-hover) !important;
+button.mt-outline-popover-btn:hover {
+  background: var(--background-modifier-hover);
 }
 
 .mt-outline-btn-icon {
@@ -826,7 +830,7 @@
   color: var(--text-normal);
 }
 
-.mt-outline-popover-btn.is-primary .mt-outline-btn-label {
+button.mt-outline-popover-btn.is-primary .mt-outline-btn-label {
   color: var(--interactive-accent);
 }
 
@@ -981,14 +985,14 @@
   justify-content: center;
 }
 
-.mt-10ff-input {
+input.mt-10ff-input {
   flex: 0 1 auto;
   width: 65%;
   max-width: 65%;
   min-width: 0;
 }
 
-.mt-10ff-restart-btn {
+button.mt-10ff-restart-btn {
   flex: 0 0 auto;
   margin-left: 0;
 }
@@ -1061,5 +1065,5 @@
 }
 
 .mt-hidden {
-  display: none !important;
+  display: none;
 }
